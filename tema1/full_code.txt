@@ -1,0 +1,141 @@
+#########
+# 1
+#########
+
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+@app.route("/", methods=["GET"])
+
+def home():
+	return jsonify({
+		"nume": "Andrei Cristea",
+		"nr matricol": "208/2024"
+		})
+
+if __name__ == "__main__":
+	app.run(host="0.0.0.0", port = 8001)
+	
+	###############################################
+	#########
+# 2
+#########
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "nume": "Andrei Cristea",
+        "nr_matricol": "208/2024"
+    })
+
+#endpoint pt curl
+@app.route("/items/<item_id>", methods=["GET"])
+def get_item(item_id):
+    return jsonify({"item_id": item_id})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8001)
+
+
+
+
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "nume": "Andrei Cristea",
+        "nr_matricol": "208/2024"
+    })
+
+@app.route("/items/<item_id>", methods=["GET"])
+def get_item(item_id):
+    return jsonify({"item_id": item_id})
+
+
+@app.route("/ip", methods=["GET"])
+def get_ip():
+    ip = request.remote_addr
+    return jsonify({"ip": ip})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8001)
+
+
+
+
+
+###########################################
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "nume": "Andrei Cristea",
+        "nr_matricol": "208/2024"
+    })
+
+@app.route("/items/<item_id>", methods=["GET"])
+def get_item(item_id):
+    return jsonify({"item_id": item_id})
+
+
+@app.route("/ip", methods=["GET"])
+def get_ip():
+    ip = request.remote_addr
+    return jsonify({"ip": ip})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8001)
+# https://hub.docker.com/r/andrei8cristea/server4
+
+
+################################
+
+from flask import Flask, request, jsonify
+import math
+
+app = Flask(__name__)
+
+
+@app.route("/subnet", methods=["POST"])
+def calc_subnet():
+    data = request.get_json()
+    noduri = data["noduri"]
+
+    #gasesc numarul minim de biti pe care ii folosc la adresele de host
+    bits = math.ceil(math.log2(noduri + 2))  # adun 2  pr cele speciale (nefolosibile)
+
+    prefix = 32 - bits
+
+    #il transform in subnet mask
+    mask = []
+    remaining = prefix
+    for _ in range(4):
+        if remaining >= 8:
+            mask.append(255)
+            remaining -= 8
+        else:
+            val = (256 - 2**(8 - remaining)) if remaining > 0 else 0
+            mask.append(val)
+            remaining = 0
+
+    subnet_mask = ".".join(map(str, mask))
+
+    return jsonify({
+        "cidr": f"/{prefix}",
+        "mask": subnet_mask
+    })
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8001)
+
+
