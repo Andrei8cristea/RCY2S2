@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  server:
+    image: tema2
+    container_name: server
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: tail -f /dev/null
+    networks:
+      - reteaua_mea
+
+  client:
+    image: tema2
+    container_name: client
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: tail -f /dev/null
+    networks:
+      - reteaua_mea
+
+networks:
+  reteaua_mea:
+    driver: bridge
